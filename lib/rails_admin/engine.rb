@@ -24,12 +24,14 @@ module RailsAdmin
     end
 
     initializer 'RailsAdmin setup middlewares' do |app|
-      app.config.session_store :cookie_store
-      app.config.middleware.use ActionDispatch::Cookies
-      app.config.middleware.use ActionDispatch::Flash
-      app.config.middleware.use ActionDispatch::Session::CookieStore, app.config.session_options
-      app.config.middleware.use Rack::MethodOverride
-      app.config.middleware.use Rack::Pjax
+      if app.config.respond_to?(:api_only) && app.config.api_only
+        app.config.session_store :cookie_store
+        app.config.middleware.use ActionDispatch::Cookies
+        app.config.middleware.use ActionDispatch::Flash
+        app.config.middleware.use ActionDispatch::Session::CookieStore, app.config.session_options
+        app.config.middleware.use Rack::MethodOverride
+        app.config.middleware.use Rack::Pjax
+      end
     end
 
     initializer 'RailsAdmin reload config in development' do
